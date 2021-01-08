@@ -28,11 +28,14 @@ class Vocabulary:
             self.vocab[token] = len(self.vocab) + 1
         return self.vocab[token]
 
-    def save(self, path=None):
+    def save(self, path=None, verbosity=0):
         if path is None:
             path = self.path
         utils.create_folders_if_necessary(path)
-        json.dump(self.vocab, open(path, "w"))
+
+        if verbosity:
+            json.dump(self.vocab, open(path, "w"))
+            print(f"Saved {path}")
 
     def copy_vocab_from(self, other):
         '''
@@ -56,7 +59,7 @@ class InstructionsPreprocessor(object):
             else:
                 raise FileNotFoundError('No pre-trained model under the specified name')
 
-    def __call__(self, obss, device=None):
+    def __call__(self, obss, device=None, torchify=True):
         raw_instrs = []
         max_instr_len = 0
 
@@ -71,7 +74,8 @@ class InstructionsPreprocessor(object):
         for i, instr in enumerate(raw_instrs):
             instrs[i, :len(instr)] = instr
 
-        instrs = torch.tensor(instrs, device=device, dtype=torch.long)
+        if torchify:
+            instrs = torch.tensor(instrs, device=device, dtype=torch.long)
         return instrs
 
 
