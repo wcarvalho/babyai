@@ -77,6 +77,7 @@ class ACModel(nn.Module, babyai.rl.RecurrentACModel):
         self.arch = arch
         self.lang_model = lang_model
         self.aux_info = aux_info
+
         if self.res and image_dim != 128:
             raise ValueError(f"image_dim is {image_dim}, expected 128")
         self.image_dim = image_dim
@@ -215,6 +216,7 @@ class ACModel(nn.Module, babyai.rl.RecurrentACModel):
         return self.memory_dim
 
     def forward(self, obs, memory, instr_embedding=None):
+
         if self.use_instr and instr_embedding is None:
             instr_embedding = self._get_instr_embedding(obs.instr)
         if self.use_instr and self.lang_model == "attgru":
@@ -274,6 +276,7 @@ class ACModel(nn.Module, babyai.rl.RecurrentACModel):
 
     def _get_instr_embedding(self, instr):
         lengths = (instr != 0).sum(1).long()
+        import ipdb; ipdb.set_trace()
         if self.lang_model == 'gru':
             out, _ = self.instr_rnn(self.word_embedding(instr))
             hidden = out[range(len(lengths)), lengths-1, :]
@@ -283,6 +286,7 @@ class ACModel(nn.Module, babyai.rl.RecurrentACModel):
             masks = (instr != 0).float()
 
             if lengths.shape[0] > 1:
+                # import ipdb; ipdb.set_trace()
                 seq_lengths, perm_idx = lengths.sort(0, descending=True)
                 iperm_idx = torch.LongTensor(perm_idx.shape).fill_(0)
                 if instr.is_cuda: iperm_idx = iperm_idx.cuda()

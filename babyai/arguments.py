@@ -67,7 +67,7 @@ class ArgumentParser(argparse.ArgumentParser):
                             help="dimensionality of the memory LSTM")
         self.add_argument("--no-instr", action="store_true", default=False,
                             help="don't use instructions in the model")
-        self.add_argument("--instr-arch", default="gru",
+        self.add_argument("--instr-arch", default="bigru",
                             help="arch to encode instructions, possible values: gru, bigru, conv, bow (default: gru)")
         self.add_argument("--no-mem", action="store_true", default=False,
                             help="don't use memory in the model")

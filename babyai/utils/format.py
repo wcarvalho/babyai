@@ -13,8 +13,8 @@ def get_vocab_path(model_name):
 
 
 class Vocabulary:
-    def __init__(self, model_name):
-        self.path = get_vocab_path(model_name)
+    def __init__(self, model_name="", path=""):
+        self.path = path if path else get_vocab_path(model_name)
         self.max_size = 100
         if os.path.exists(self.path):
             self.vocab = json.load(open(self.path))
@@ -45,11 +45,12 @@ class Vocabulary:
 
 
 class InstructionsPreprocessor(object):
-    def __init__(self, model_name, load_vocab_from=None):
+    def __init__(self, model_name="", path="", load_vocab_from=None):
         self.model_name = model_name
-        self.vocab = Vocabulary(model_name)
+        path = path if path else get_vocab_path(model_name)
 
-        path = get_vocab_path(model_name)
+        self.vocab = Vocabulary(model_name, path)
+
         if not os.path.exists(path) and load_vocab_from is not None:
             # self.vocab.vocab should be an empty dict
             secondary_path = get_vocab_path(load_vocab_from)
