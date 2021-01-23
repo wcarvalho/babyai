@@ -190,13 +190,14 @@ class Level_PutNextLocal(RoomGridLevel):
     with no doors, no distractors
     """
 
-    def __init__(self, room_size=8, num_objs=8, seed=None):
+    def __init__(self, room_size=8, num_objs=8, seed=None, **kwargs):
         self.num_objs = num_objs
         super().__init__(
             num_rows=1,
             num_cols=1,
             room_size=room_size,
-            seed=seed
+            seed=seed,
+            **kwargs
         )
 
     def gen_mission(self):
